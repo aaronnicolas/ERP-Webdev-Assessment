@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const addItemForm = document.getElementById('add-item-form');
     const searchInput = document.getElementById('search-item');
     const inventoryBody = document.getElementById('inventory-body');
+    const formError = document.getElementById('form-error');
     const filterCategory = document.getElementById('filter-category');
     const sortQuantityBtn = document.getElementById('sort-quantity-btn');
     const deleteModal = document.getElementById('delete-modal');
     const modalText = document.getElementById('delete-modal-text');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
     const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const toastContainer = document.getElementById('toast-container');
 
     const STORAGE_KEY = 'inventoryApp.inventory';
 
@@ -30,6 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const getNextId = () => (inventory.length > 0 ? Math.max(...inventory.map(item => item.id)) + 1 : 1);
+
+    const showToast = (message, duration = 3000) => {
+        if (!toastContainer) {
+            console.error('Toast container not found!');
+            return;
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        // Animate out and remove
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, duration);
+    };
 
     const openDeleteModal = (id, name) => {
         itemToDeleteId = id;
@@ -91,18 +113,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add a new item
     addItemForm.addEventListener('submit', (e) => {
         e.preventDefault();
-
-        const name = document.getElementById('item-name').value;
-        const category = document.getElementById('item-category').value;
-        const quantity = parseInt(document.getElementById('item-quantity').value, 10);
-        const price = parseFloat(document.getElementById('item-price').value);
-
-        // Basic validation
-        if (!name || !category || isNaN(quantity) || quantity < 0 || isNaN(price) || price < 0) {
-            alert('Please fill out all fields correctly. Quantity and Price cannot be negative.');
+ 
+        const nameInput = document.getElementById('item-name');
+        const categoryInput = document.getElementById('item-category');
+        const quantityInput = document.getElementById('item-quantity');
+        const priceInput = document.getElementById('item-price');
+ 
+        const name = nameInput.value;
+        const category = categoryInput.value;
+        const quantity = parseInt(quantityInput.value, 10);
+        const price = parseFloat(priceInput.value);
+ 
+        // Hide previous errors
+        formError.classList.remove('show');
+        [nameInput, categoryInput, quantityInput, priceInput].forEach(input => input.classList.remove('invalid'));
+ 
+        let isValid = true;
+ 
+        if (!name) {
+            nameInput.classList.add('invalid');
+            isValid = false;
+        }
+        if (!category) {
+            categoryInput.classList.add('invalid');
+            isValid = false;
+        }
+        if (isNaN(quantity) || quantity < 0) {
+            quantityInput.classList.add('invalid');
+            isValid = false;
+        }
+        if (isNaN(price) || price < 0) {
+            priceInput.classList.add('invalid');
+            isValid = false;
+        }
+ 
+        if (!isValid) {
+            formError.textContent = 'Please fill out all fields correctly. Quantity and Price cannot be negative.';
+            formError.classList.add('show');
             return;
         }
-
         const newItem = { id: getNextId(), name, category, quantity, price };
         inventory.push(newItem);
         addItemForm.reset();
@@ -153,8 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const newQuantity = parseInt(quantityInput.value, 10);
             const newPrice = parseFloat(priceInput.value);
 
+            // Reset validation styles
+            quantityInput.classList.remove('invalid');
+            priceInput.classList.remove('invalid');
+
+            let isValid = true;
             if (isNaN(newQuantity) || newQuantity < 0 || isNaN(newPrice) || newPrice < 0) {
-                alert('Invalid quantity or price. Values cannot be negative.');
+                if (isNaN(newQuantity) || newQuantity < 0) {
+                    quantityInput.classList.add('invalid');
+                }
+                if (isNaN(newPrice) || newPrice < 0) {
+                    priceInput.classList.add('invalid');
+                }
+                isValid = false;
+            }
+
+            if (!isValid) {
+                showToast("Invalid input! Please enter a positive number.");
                 return;
             }
 

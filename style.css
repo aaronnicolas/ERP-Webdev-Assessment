@@ -24,7 +24,8 @@
     /* Sizing & Effects */
     --border-radius: 6px;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --input-focus-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+    --input-focus-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25); /* blue */
+    --input-invalid-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25); /* red */
 }
 
 body {
@@ -83,6 +84,20 @@ h2 {
     font-size: 1.25rem;
 }
 
+.error-message {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    margin-bottom: -10px; /* Pull content below it up slightly */
+    display: none; /* Hidden by default */
+    text-align: center;
+    font-weight: 500;
+}
+
+.error-message.show {
+    display: block;
+}
+
 #add-item-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -106,6 +121,11 @@ h2 {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: var(--input-focus-shadow);
+}
+
+input.invalid {
+    border-color: var(--danger-color);
+    box-shadow: var(--input-invalid-shadow);
 }
 
 #add-item-form button {
@@ -375,4 +395,32 @@ td input[type="number"]:focus {
     height: auto;
     padding: 8px 16px;
     font-size: 0.9rem;
+}
+
+/* Toast/Notification Styles */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: var(--danger-color);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    font-weight: 500;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
 }
