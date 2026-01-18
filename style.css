@@ -7,6 +7,8 @@
     --warning-hover: #d39e00;
     --danger-color: #dc3545;
     --danger-hover: #c82333;
+    --secondary-color: #6c757d;
+    --secondary-hover: #5a6268;
     --light-bg: #f8f9fa;
     --border-color: #dee2e6;
     --text-color: #212529;
@@ -246,6 +248,15 @@ h2 {
 
 .save-btn:hover {
     background-color: var(--success-hover);
+}
+
+/* Cancel button in edit mode */
+.cancel-btn {
+    background-color: var(--secondary-color);
+}
+
+.cancel-btn:hover {
+    background-color: var(--secondary-hover);
 }
 
 /* In-table inputs for editing */

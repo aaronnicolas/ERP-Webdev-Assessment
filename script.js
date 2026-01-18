@@ -114,18 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (target.classList.contains('edit-btn')) {
+            const item = inventory.find(item => item.id === id);
             const quantityCell = row.querySelector('.quantity');
             const priceCell = row.querySelector('.price');
+            const actionsCell = target.closest('td');
 
             const currentQuantity = quantityCell.textContent;
             const currentPrice = priceCell.textContent;
 
             quantityCell.innerHTML = `<input type="number" value="${currentQuantity}" min="0">`;
             priceCell.innerHTML = `<input type="number" value="${currentPrice}" min="0" step="0.01">`;
-
-            target.textContent = 'Save';
-            target.classList.remove('edit-btn');
-            target.classList.add('save-btn');
+            actionsCell.innerHTML = `
+                <button class="action-btn save-btn" aria-label="Save changes for ${item.name}">Save</button>
+                <button class="action-btn cancel-btn" aria-label="Cancel editing ${item.name}">Cancel</button>
+            `;
         } else if (target.classList.contains('save-btn')) {
             const quantityInput = row.querySelector('.quantity input');
             const priceInput = row.querySelector('.price input');
@@ -144,6 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             saveInventory();
             renderInventory(); // Re-render to show updated, non-editable values
+        } else if (target.classList.contains('cancel-btn')) {
+            renderInventory(); // Simply re-render the table to cancel the edit
         }
     });
 
