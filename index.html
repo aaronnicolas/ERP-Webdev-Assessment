@@ -15,7 +15,9 @@
         <div class="form-container">
             <h2>Add New Item</h2>
             <form id="add-item-form">
+                <label for="item-name" class="visually-hidden">Item Name</label>
                 <input type="text" id="item-name" placeholder="Item Name" required>
+                <label for="item-category" class="visually-hidden">Category</label>
                 <select id="item-category" required>
                     <option value="" disabled selected>Select Category</option>
                     <option value="Electronics">Electronics</option>
@@ -23,7 +25,9 @@
                     <option value="Food">Food</option>
                     <option value="Clothing">Clothing</option>
                 </select>
+                <label for="item-quantity" class="visually-hidden">Quantity</label>
                 <input type="number" id="item-quantity" placeholder="Quantity" min="0" required>
+                <label for="item-price" class="visually-hidden">Price</label>
                 <input type="number" id="item-price" placeholder="Price ($)" min="0" step="0.01" required>
                 <button type="submit"><i class="fa-solid fa-plus"></i> Add Item</button>
             </form>
@@ -57,11 +61,11 @@
             <table id="inventory-table">
                 <thead>
                     <tr>
-                        <th>Item Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Price ($)</th>
-                        <th>Actions</th>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price ($)</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="inventory-body">
@@ -74,9 +78,9 @@
     <script src="script.js"></script>
 
     <!-- Deletion Confirmation Modal -->
-    <div id="delete-modal" class="modal-overlay">
+    <div id="delete-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-content">
-            <h3>Confirm Deletion</h3>
+            <h3 id="modal-title">Confirm Deletion</h3>
             <p id="delete-modal-text">Are you sure you want to delete this item?</p>
             <div class="modal-actions">
                 <button id="cancel-delete-btn" class="action-btn cancel-btn">Cancel</button>

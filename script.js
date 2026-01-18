@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let inventory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialInventory;
     let isSortAscending = true;
     let itemToDeleteId = null;
+    let triggeringElement = null; // To store element that opens modal for focus restoration
 
     // --- Utility Functions ---
     const saveInventory = () => {
@@ -54,14 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openDeleteModal = (id, name) => {
+        triggeringElement = document.activeElement; // Store the element that has focus
         itemToDeleteId = id;
         modalText.innerHTML = `Are you sure you want to delete <strong>"${name}"</strong>? This action cannot be undone.`;
         deleteModal.classList.add('show');
+        cancelDeleteBtn.focus(); // Move focus to an element within the modal
     };
 
     const closeDeleteModal = () => {
         itemToDeleteId = null;
         deleteModal.classList.remove('show');
+        if (triggeringElement) {
+            triggeringElement.focus(); // Restore focus to the original element
+        }
     };
 
     // --- Main Render Function ---
@@ -266,8 +272,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && deleteModal.classList.contains('show')) {
-            closeDeleteModal();
+        if (deleteModal.classList.contains('show')) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+            }
+
+            // Focus trapping logic
+            if (e.key === 'Tab') {
+                const focusableElements = Array.from(deleteModal.querySelectorAll('button'));
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        lastElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastElement) {
+                        firstElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
         }
     });
 
