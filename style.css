@@ -1,23 +1,30 @@
 :root {
-    --primary-color: #007bff;
-    --primary-hover: #0056b3;
-    --success-color: #28a745;
-    --success-hover: #218838;
-    --warning-color: #ffc107;
-    --warning-hover: #d39e00;
-    --danger-color: #dc3545;
-    --danger-hover: #c82333;
-    --secondary-color: #6c757d;
-    --secondary-hover: #5a6268;
-    --light-bg: #f8f9fa;
-    --border-color: #dee2e6;
-    --text-color: #212529;
-    --heading-color: #343a40;
+    /* Primary Action */
+    --primary-color: #3B82F6; /* blue-500 */
+    --primary-hover: #2563EB; /* blue-600 */
+
+    /* Intentional Colors */
+    --success-color: #22C55E; /* green-500 */
+    --success-hover: #16A34A; /* green-600 */
+    --warning-color: #FBBF24; /* amber-400 */
+    --warning-hover: #F59E0B; /* amber-500 */
+    --danger-color: #EF4444; /* red-500 */
+    --danger-hover: #DC2626; /* red-600 */
+    --secondary-color: #64748B; /* slate-500 */
+    --secondary-hover: #475569; /* slate-600 */
+
+    /* UI & Text */
+    --light-bg: #F8FAFC; /* slate-50 */
+    --border-color: #E2E8F0; /* slate-200 */
+    --text-color: #475569; /* slate-600 */
+    --heading-color: #1E293B; /* slate-800 */
     --white: #fff;
-    --body-bg: #eef2f5;
+    --body-bg: #F1F5F9; /* slate-100 */
+
+    /* Sizing & Effects */
     --border-radius: 6px;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --input-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    --input-focus-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
 }
 
 body {
@@ -110,6 +117,10 @@ h2 {
     font-size: 1rem;
     font-weight: 500;
     transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     grid-column: 1 / -1; /* Make button span full width on new line */
 }
 
@@ -152,6 +163,16 @@ h2 {
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Allow the search container to expand */
+}
+
+.search-container input {
+    flex-grow: 1;
+}
+
 .controls input[type="text"]:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -162,6 +183,11 @@ h2 {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    min-width: 215px; /* Prevent layout shift when text changes */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 #sort-quantity-btn:hover {
@@ -197,6 +223,20 @@ h2 {
     letter-spacing: 0.5px;
 }
 
+/* Prevent layout shift in the actions column by giving it a stable width */
+#inventory-table th:last-child,
+#inventory-table td:last-child {
+    min-width: 100px;
+}
+
+/* Prevent layout shift in quantity/price columns during edit */
+#inventory-table th:nth-child(3),
+#inventory-table td:nth-child(3),
+#inventory-table th:nth-child(4),
+#inventory-table td:nth-child(4) {
+    min-width: 120px;
+}
+
 #inventory-table tbody tr:nth-child(even) {
     background-color: var(--light-bg);
 }
@@ -219,6 +259,11 @@ h2 {
     font-size: 0.9rem;
     font-weight: 500;
     transition: background-color 0.2s, transform 0.1s;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .action-btn:hover {
@@ -265,6 +310,7 @@ td input[type="number"] {
     padding: 6px;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
+    box-sizing: border-box;
 }
 
 td input[type="number"]:focus {
