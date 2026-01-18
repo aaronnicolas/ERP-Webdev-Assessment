@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const inventoryBody = document.getElementById('inventory-body');
     const filterCategory = document.getElementById('filter-category');
     const sortQuantityBtn = document.getElementById('sort-quantity-btn');
+    const deleteModal = document.getElementById('delete-modal');
+    const modalText = document.getElementById('delete-modal-text');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 
     const STORAGE_KEY = 'inventoryApp.inventory';
 
@@ -18,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load from localStorage or use initial data
     let inventory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialInventory;
     let isSortAscending = true;
+    let itemToDeleteId = null;
 
     // --- Utility Functions ---
     const saveInventory = () => {
@@ -25,6 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const getNextId = () => (inventory.length > 0 ? Math.max(...inventory.map(item => item.id)) + 1 : 1);
+
+    const openDeleteModal = (id, name) => {
+        itemToDeleteId = id;
+        modalText.innerHTML = `Are you sure you want to delete <strong>"${name}"</strong>? This action cannot be undone.`;
+        deleteModal.classList.add('show');
+    };
+
+    const closeDeleteModal = () => {
+        itemToDeleteId = null;
+        deleteModal.classList.remove('show');
+    };
 
     // --- Main Render Function ---
     const renderInventory = () => {
@@ -112,10 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (deleteButton) {
             const itemToDelete = inventory.find(item => item.id === id);
-            if (itemToDelete && window.confirm(`Are you sure you want to delete "${itemToDelete.name}"?`)) {
-                inventory = inventory.filter(item => item.id !== id);
-                saveInventory();
-                renderInventory();
+            if (itemToDelete) {
+                openDeleteModal(itemToDelete.id, itemToDelete.name);
             }
         } else if (editButton) {
             const item = inventory.find(item => item.id === id);
@@ -167,6 +181,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const iconClass = isSortAscending ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short';
         sortQuantityBtn.innerHTML = `<i class="fa-solid ${iconClass}"></i> Sort by Quantity (${isSortAscending ? 'Asc' : 'Desc'})`;
         renderInventory();
+    });
+
+    // --- Modal Event Handlers ---
+    confirmDeleteBtn.addEventListener('click', () => {
+        if (itemToDeleteId !== null) {
+            inventory = inventory.filter(item => item.id !== itemToDeleteId);
+            saveInventory();
+            renderInventory();
+            closeDeleteModal();
+        }
+    });
+
+    cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.classList.contains('show')) {
+            closeDeleteModal();
+        }
     });
 
     // --- Initial Render ---
