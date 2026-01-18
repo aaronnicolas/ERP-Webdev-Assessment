@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentQuantity = quantityCell.textContent;
             const currentPrice = priceCell.textContent;
 
-            quantityCell.innerHTML = `<input type="number" value="" min="0">`;
-            priceCell.innerHTML = `<input type="number" value="" min="0" step="0.01">`;
+            quantityCell.innerHTML = `<input type="number" value="${currentQuantity}" min="0">`;
+            priceCell.innerHTML = `<input type="number" value="${currentPrice}" min="0" step="0.01">`;
 
             target.textContent = 'Save';
             target.classList.remove('edit-btn');
