@@ -1,95 +1,170 @@
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --success-color: #28a745;
+    --success-hover: #218838;
+    --warning-color: #ffc107;
+    --warning-hover: #d39e00;
+    --danger-color: #dc3545;
+    --danger-hover: #c82333;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --text-color: #212529;
+    --heading-color: #343a40;
+    --white: #fff;
+    --body-bg: #eef2f5;
+    --border-radius: 6px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --input-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color);
     margin: 0;
     padding: 20px;
+    line-height: 1.5;
+}
+
+/* Set pointer cursor for all interactive elements */
+select, button {
+    cursor: pointer;
 }
 
 .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1100px;
+    margin: 20px auto;
+    background-color: var(--white);
+    padding: 30px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
 }
 
-h1, h2 {
-    color: #0056b3;
+h1 {
+    color: var(--heading-color);
     text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+h2 {
+    color: var(--heading-color);
+    text-align: left;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
 /* Form Styling */
 .form-container {
     margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fafafa;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--light-bg);
+}
+
+.form-container h2 {
+    margin-top: 0;
+    border-bottom: none;
+    text-align: center;
+    font-size: 1.25rem;
 }
 
 #add-item-form {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
-    align-items: center;
+    align-items: flex-end;
 }
 
 #add-item-form input,
 #add-item-form select {
-    flex: 1;
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-sizing: border-box;
+}
+
+#add-item-form input:focus,
+#add-item-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: var(--input-focus-shadow);
 }
 
 #add-item-form button {
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: var(--success-color);
     color: white;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    grid-column: 1 / -1; /* Make button span full width on new line */
+}
+
+@media (min-width: 992px) {
+    #add-item-form {
+        grid-template-columns: 2fr 1.5fr 1fr 1fr auto;
+    }
+    #add-item-form button {
+        grid-column: auto;
+    }
 }
 
 #add-item-form button:hover {
-    background-color: #218838;
+    background-color: var(--success-hover);
 }
 
 /* Controls for Filter and Sort */
 .controls {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
+    padding: 15px;
+    background-color: var(--light-bg);
+    border-radius: var(--border-radius);
 }
 
 .controls label {
-    margin-right: 10px;
-    font-weight: bold;
+    margin-right: 8px;
+    font-weight: 500;
 }
 
-.controls select, .controls button {
+.controls select, .controls button, .controls input[type="text"] {
     padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--white);
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.controls input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: var(--input-focus-shadow);
 }
 
 #sort-quantity-btn {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
+    border-color: var(--primary-color);
 }
 
 #sort-quantity-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
 }
 
 /* Table Styling */
@@ -105,23 +180,31 @@ h1, h2 {
 
 #inventory-table th,
 #inventory-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
+    border: 1px solid var(--border-color);
+    padding: 12px 15px;
     text-align: left;
+    vertical-align: middle;
 }
 
 #inventory-table th {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
+    background-color: var(--light-bg);
+    color: var(--heading-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
 }
 
 #inventory-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: var(--light-bg);
 }
 
 #inventory-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e9ecef;
+}
+
+#inventory-table td .action-btn:last-child {
+    margin-right: 0;
 }
 
 /* Action Buttons in Table */
@@ -129,31 +212,52 @@ h1, h2 {
     padding: 5px 10px;
     margin-right: 5px;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: var(--border-radius);
     color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
 }
 
 .edit-btn {
-    background-color: #ffc107;
+    background-color: var(--warning-color);
+    color: var(--text-color);
 }
 
 .edit-btn:hover {
-    background-color: #e0a800;
+    background-color: var(--warning-hover);
 }
 
 .delete-btn {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
 }
 
 .delete-btn:hover {
-    background-color: #c82333;
+    background-color: var(--danger-hover);
 }
 
 .save-btn {
-    background-color: #28a745;
+    background-color: var(--success-color);
 }
 
 .save-btn:hover {
-    background-color: #218838;
+    background-color: var(--success-hover);
+}
+
+/* In-table inputs for editing */
+td input[type="number"] {
+    width: 80px;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+td input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: var(--input-focus-shadow);
 }
