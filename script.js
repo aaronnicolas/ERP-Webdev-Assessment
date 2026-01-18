@@ -1,23 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
     const addItemForm = document.getElementById('add-item-form');
+    const searchInput = document.getElementById('search-item');
     const inventoryBody = document.getElementById('inventory-body');
     const filterCategory = document.getElementById('filter-category');
     const sortQuantityBtn = document.getElementById('sort-quantity-btn');
 
-    let inventory = [
+    const STORAGE_KEY = 'inventoryApp.inventory';
+
+    // Default data if localStorage is empty
+    const initialInventory = [
         { id: 1, name: 'Laptop', category: 'Electronics', quantity: 15, price: 1200 },
         { id: 2, name: 'Office Chair', category: 'Furniture', quantity: 30, price: 150 },
         { id: 3, name: 'Coffee Beans', category: 'Food', quantity: 100, price: 25 },
         { id: 4, name: 'T-Shirt', category: 'Clothing', quantity: 200, price: 20 }
     ];
+
+    // Load from localStorage or use initial data
+    let inventory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialInventory;
     let isSortAscending = true;
-    let nextId = 5;
+
+    // --- Utility Functions ---
+    const saveInventory = () => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
+    };
+
+    const getNextId = () => (inventory.length > 0 ? Math.max(...inventory.map(item => item.id)) + 1 : 1);
 
     // --- Main Render Function ---
     const renderInventory = () => {
         inventoryBody.innerHTML = ''; // Clear existing table rows
 
         let filteredInventory = inventory;
+
+        // Apply search filter
+        const searchTerm = searchInput.value.toLowerCase();
+        if (searchTerm) {
+            filteredInventory = filteredInventory.filter(item =>
+                item.name.toLowerCase().includes(searchTerm)
+            );
+        }
 
         // Apply category filter
         const category = filterCategory.value;
@@ -41,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="quantity">${item.quantity}</td>
                 <td class="price">${item.price.toFixed(2)}</td>
                 <td>
-                    <button class="action-btn edit-btn">Edit</button>
-                    <button class="action-btn delete-btn">Delete</button>
+                    <button class="action-btn edit-btn" aria-label="Edit ${item.name}">Edit</button>
+                    <button class="action-btn delete-btn" aria-label="Delete ${item.name}">Delete</button>
                 </td>
             `;
             inventoryBody.appendChild(row);
@@ -66,9 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const newItem = { id: nextId++, name, category, quantity, price };
+        const newItem = { id: getNextId(), name, category, quantity, price };
         inventory.push(newItem);
         addItemForm.reset();
+        saveInventory();
         renderInventory();
     });
 
@@ -76,11 +98,19 @@ document.addEventListener('DOMContentLoaded', () => {
     inventoryBody.addEventListener('click', (e) => {
         const target = e.target;
         const row = target.closest('tr');
+
+        // Guard against clicks on the table body but not on a specific row
+        if (!row || !row.dataset.id) return;
+
         const id = parseInt(row.dataset.id, 10);
 
         if (target.classList.contains('delete-btn')) {
-            inventory = inventory.filter(item => item.id !== id);
-            renderInventory();
+            const itemToDelete = inventory.find(item => item.id === id);
+            if (itemToDelete && window.confirm(`Are you sure you want to delete "${itemToDelete.name}"?`)) {
+                inventory = inventory.filter(item => item.id !== id);
+                saveInventory();
+                renderInventory();
+            }
         }
 
         if (target.classList.contains('edit-btn')) {
@@ -111,13 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = inventory.find(item => item.id === id);
             item.quantity = newQuantity;
             item.price = newPrice;
-            
+
+            saveInventory();
             renderInventory(); // Re-render to show updated, non-editable values
         }
     });
 
     // Filter items by category
     filterCategory.addEventListener('change', renderInventory);
+
+    // Search items by name
+    searchInput.addEventListener('input', renderInventory);
 
     // Sort items by quantity
     sortQuantityBtn.addEventListener('click', () => {
