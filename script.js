@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="quantity">${item.quantity}</td>
                 <td class="price">${item.price.toFixed(2)}</td>
                 <td>
-                    <button class="action-btn edit-btn" aria-label="Edit ${item.name}">Edit</button>
-                    <button class="action-btn delete-btn" aria-label="Delete ${item.name}">Delete</button>
+                    <button class="action-btn edit-btn" aria-label="Edit ${item.name}"><i class="fa-solid fa-pencil"></i></button>
+                    <button class="action-btn delete-btn" aria-label="Delete ${item.name}"><i class="fa-solid fa-trash-can"></i></button>
                 </td>
             `;
             inventoryBody.appendChild(row);
@@ -96,28 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle actions (Edit, Delete, Save) on the table
     inventoryBody.addEventListener('click', (e) => {
-        const target = e.target;
-        const row = target.closest('tr');
+        const row = e.target.closest('tr');
 
         // Guard against clicks on the table body but not on a specific row
         if (!row || !row.dataset.id) return;
 
         const id = parseInt(row.dataset.id, 10);
+        const target = e.target;
 
-        if (target.classList.contains('delete-btn')) {
+        // Use .closest() to handle clicks on icons inside buttons
+        const deleteButton = target.closest('.delete-btn');
+        const editButton = target.closest('.edit-btn');
+        const saveButton = target.closest('.save-btn');
+        const cancelButton = target.closest('.cancel-btn');
+
+        if (deleteButton) {
             const itemToDelete = inventory.find(item => item.id === id);
             if (itemToDelete && window.confirm(`Are you sure you want to delete "${itemToDelete.name}"?`)) {
                 inventory = inventory.filter(item => item.id !== id);
                 saveInventory();
                 renderInventory();
             }
-        }
-
-        if (target.classList.contains('edit-btn')) {
+        } else if (editButton) {
             const item = inventory.find(item => item.id === id);
             const quantityCell = row.querySelector('.quantity');
             const priceCell = row.querySelector('.price');
-            const actionsCell = target.closest('td');
+            const actionsCell = editButton.closest('td');
 
             const currentQuantity = quantityCell.textContent;
             const currentPrice = priceCell.textContent;
@@ -125,10 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
             quantityCell.innerHTML = `<input type="number" value="${currentQuantity}" min="0">`;
             priceCell.innerHTML = `<input type="number" value="${currentPrice}" min="0" step="0.01">`;
             actionsCell.innerHTML = `
-                <button class="action-btn save-btn" aria-label="Save changes for ${item.name}">Save</button>
-                <button class="action-btn cancel-btn" aria-label="Cancel editing ${item.name}">Cancel</button>
+                <button class="action-btn save-btn" aria-label="Save changes for ${item.name}"><i class="fa-solid fa-check"></i></button>
+                <button class="action-btn cancel-btn" aria-label="Cancel editing ${item.name}"><i class="fa-solid fa-xmark"></i></button>
             `;
-        } else if (target.classList.contains('save-btn')) {
+        } else if (saveButton) {
             const quantityInput = row.querySelector('.quantity input');
             const priceInput = row.querySelector('.price input');
 
@@ -146,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             saveInventory();
             renderInventory(); // Re-render to show updated, non-editable values
-        } else if (target.classList.contains('cancel-btn')) {
+        } else if (cancelButton) {
             renderInventory(); // Simply re-render the table to cancel the edit
         }
     });
@@ -160,7 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sort items by quantity
     sortQuantityBtn.addEventListener('click', () => {
         isSortAscending = !isSortAscending;
-        sortQuantityBtn.textContent = `Sort by Quantity (${isSortAscending ? 'Asc' : 'Desc'})`;
+        const iconClass = isSortAscending ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short';
+        sortQuantityBtn.innerHTML = `<i class="fa-solid ${iconClass}"></i> Sort by Quantity (${isSortAscending ? 'Asc' : 'Desc'})`;
         renderInventory();
     });
 
