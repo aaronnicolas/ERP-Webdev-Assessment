@@ -66,12 +66,19 @@ The application was built using the "vanilla" web stack, prioritizing simplicity
 
 Several key decisions were made during development to balance simplicity with a high-quality user experience, reflecting modern industry standards.
 
-### 1. Data Persistence
+> **Note on Development Time:** This project was developed with an initial 2.5-hour time constraint in mind. This was extended slightly to thoughtfully implement the following design decisions, which prioritize a high-quality, professional user experience over raw development speed.
+
+### 1. Core Technology Stack (Vanilla JS)
+
+- **Decision:** Build the entire application using vanilla HTML, CSS, and JavaScript, without any external frameworks (like React, Vue, or Angular).
+- **Trade-off:** This was a deliberate choice to prioritize performance, simplicity, and zero dependencies. For a small-scale application like this, a framework would introduce unnecessary overhead and a complex build process. The trade-off is that for a larger, more complex application, this approach would lack the structured state management and component architecture that frameworks provide, making it harder to scale and maintain.
+
+### 2. Data Persistence
 
 - **Decision:** Use the browser's `localStorage` to persist inventory data.
 - **Trade-off:** The initial approach was to use a simple in-memory array, which would reset on every page refresh. I opted for `localStorage` to provide a better user experience by saving the user's data between sessions. This was a suitable compromise given the project constraint of not requiring a real backend. While not a solution for multi-user or production systems, it perfectly fits the scope of this front-end-only application.
 
-### 2. User Experience (UX) & UI Refinements
+### 3. User Experience (UX) & UI Refinements
 
 - **Custom Delete Confirmation Form (Modal):**
     - **Decision:** Replace the native `window.confirm()` browser alert with a proper UI form, implemented as a custom-built modal dialog.
@@ -89,7 +96,7 @@ Several key decisions were made during development to balance simplicity with a 
     - **Decision:** Use icons for in-table actions (Edit, Delete, Save, Cancel) instead of text labels.
     - **Trade-off:** The previous version used text-based buttons ("Edit", "Delete"), which are arguably more explicit for new users. I opted for icons to create a cleaner, more modern UI that saves valuable horizontal space within the table, a common pattern in data-dense applications. The use of `aria-label` attributes ensures the buttons remain fully accessible to screen reader users.
 
-### 3. Code Quality & Robustness
+### 4. Code Quality & Robustness
 
 - **Dynamic ID Generation:**
     - **Decision:** Implement a robust function (`Math.max(...ids) + 1`) to generate unique IDs for new items.
