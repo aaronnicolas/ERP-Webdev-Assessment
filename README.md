@@ -23,9 +23,28 @@ To reset the application's data to its default state, you can clear the stored d
 3.  Go to the **Console** tab.
 4.  Run the following command:
     ```javascript
-    localStorage.removeItem('inventoryApp.inventory');
+    localStorage.removeItem("inventoryApp.inventory");
     ```
 5.  Reload the page.
+
+---
+
+## Performance & Quality
+
+This application was built with a focus on quality and has been audited using Google's Lighthouse tool. The goal was to achieve high scores across the board, demonstrating a commitment to modern web standards.
+
+- **Performance:** 100
+- **Accessibility:** 86
+- **Best Practices:** 100
+- **SEO:** 90
+
+[View the full Lighthouse report here](https://pagespeed.web.dev/analysis/https-aaronnicolas-github-io-ERP-Webdev-Assessment/2xtegzzdvk?form_factor=desktop)
+
+### Notes on Scores
+
+- The perfect scores in **Performance** and **Best Practices** are a direct result of using a lightweight, dependency-free vanilla stack and adhering to modern development patterns.
+- The strong **Accessibility** score reflects a focus on semantic HTML and robust keyboard navigation. However, it also highlights an opportunity for continuous improvement, as further work could be done to address minor audit findings and achieve a perfect score.
+- The high **SEO** score is achieved through the use of descriptive metadata and a logical content structure.
 
 ---
 
